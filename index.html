@@ -209,8 +209,9 @@
                 <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="triggerRedo()">↪️ Redo</button>
                 <input type="file" id="fileInput" style="display: none;" accept=".txt,.js,.html,.css,.lua,.py,*/*" onchange="handleFileUpload(event)">
                 <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="openFileDirectly()">📁 Open File</button>
-                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="copyCanvas()">📄 Copy</button>
-                <button class="toolbar-btn" style="flex-shrink: 0;" onclick="openSearch()">🔍 Search</button>
+                                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="copyCanvas()">📄 Copy</button>
+                                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="pasteToCanvas()">📋 Paste</button>
+                                <button class="toolbar-btn" style="flex-shrink: 0;" onclick="openSearch()">🔍 Search</button>
                                             </div>
                         </div>
 
@@ -254,43 +255,53 @@
 
             <div class="pairs-container" id="pairsContainer">
                 <div class="pair-box" id="pair-1">
-                    <div class="pair-header">
-                        <span>Snippet #1</span>
-                        <div style="display: flex; gap: 5px;">
-                            <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
-                            <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
-                        </div>
-                    </div>
-                    <div class="label-row">
-                                                                <label>Old Code (Start snippet):</label>
-                                                                <div style="display: flex; gap: 10px; align-items: center;">
-                                                                    <span class="global-dup-warning-old" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
-                                                                    <span class="match-percentage" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
-                                                                </div>
-                                                            </div>
-                                                            <textarea class="old-code" style="margin-bottom: 6px;" placeholder="Paste old snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
-
-                                                                                                    <div class="add-end-btn" onclick="toggleEndSnippet(this)">➕ Add End Snippet (For Long Code)</div>
-
-                                                            <div class="end-code-container">
-                                                                                    <div class="label-row">
-                                                                                        <label>Old Code (End snippet):</label>
-                                                                                        <div style="display: flex; gap: 10px; align-items: center;">
-                                                                                            <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
-                                                                                            <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
-                                                                                            <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
-                                                                                        </div>
+                    <div class="pair-box" id="pair-1">
+                                        <div class="pair-header">
+                                            <span>Snippet #1</span>
+                                            <div style="display: flex; gap: 5px;">
+                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
+                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code')">📋 Paste</button>
+                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
+                                            </div>
+                                        </div>
+                                        <div class="label-row">
+                                                                                    <label>Old Code (Start snippet):</label>
+                                                                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                                                                        <span class="global-dup-warning-old" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
+                                                                                        <span class="match-percentage" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
                                                                                     </div>
-                                                                                    <textarea class="old-code-end" placeholder="Paste end snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
                                                                                 </div>
+                                                                                <textarea class="old-code" style="margin-bottom: 6px;" placeholder="Paste old snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
 
-                                                            <div class="label-row">
-                                                                                                        <label>New Code:</label>
-                                                                                                        <div style="display: flex; gap: 10px; align-items: center;">
-                                                                                                            <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
-                                                                                                            <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
+                                                                                                                        <div class="add-end-btn" onclick="toggleEndSnippet(this)">➕ Add End Snippet (For Long Code)</div>
+
+                                                                                <div class="end-code-container">
+                                                                                                        <div class="label-row">
+                                                                                                            <label>Old Code (End snippet):</label>
+                                                                                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                                                                                <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
+                                                                                                                <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
+                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code-end')">📋 Paste</button>
+                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
+                                                                                                            </div>
                                                                                                         </div>
+                                                                                                        <textarea class="old-code-end" placeholder="Paste end snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
                                                                                                     </div>
+
+                                                                                <div class="label-row">
+                                                                                                                            <label>New Code:</label>
+                                                                                                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                                                                                                <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
+                                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.new-code')">📋 Paste</button>
+                                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                    <textarea class="new-code" style="margin-bottom: 5px;" placeholder="Paste new snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
+                                                                                                                                                                                                                                                <div style="display: flex; flex-direction: column; gap: 5px; align-items: center; margin: 8px -10px -10px -10px; background: #2a2a2a; padding: 10px 12px; border-radius: 0 0 8px 8px;">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button class="action-btn clear-snippet-btn" style="background: #795548; font-size: 13px; padding: 8px 0; width: 100%;" onclick="clearSnippet(this)">🗑️ Clear All in Snippet <span class="clear-snippet-num">#1</span></button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button class="action-btn replace-all-toggle" data-active="false" style="background: #f44336; font-size: 13px; padding: 8px 0; width: 100%; display: none;" onclick="toggleReplaceAll(this)">🔴 Replace All Occurrences: OFF</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                    </div>
                                                                                 <textarea class="new-code" style="margin-bottom: 5px;" placeholder="Paste new snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
                                                                                                                                                                                                                             <div style="display: flex; flex-direction: column; gap: 5px; align-items: center; margin: 8px -10px -10px -10px; background: #2a2a2a; padding: 10px 12px; border-radius: 0 0 8px 8px;">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <button class="action-btn clear-snippet-btn" style="background: #795548; font-size: 13px; padding: 8px 0; width: 100%;" onclick="clearSnippet(this)">🗑️ Clear All in Snippet <span class="clear-snippet-num">#1</span></button>
@@ -600,22 +611,55 @@
 
     // Clipboard Native API function
     async function copyCanvas() {
-        const el = document.getElementById('fullCode');
-        try {
-            const text = el.value;
-            await navigator.clipboard.writeText(text);
-            const oldBg = el.style.background;
-            el.style.background = "#1a3a20";
-            setTimeout(() => el.style.background = oldBg, 300);
-        } catch (err) {
-            el.focus();
-            el.setSelectionRange(0, el.value.length);
-            document.execCommand('copy');
-            const oldBg = el.style.background;
-            el.style.background = "#3a1a1a";
-            setTimeout(() => el.style.background = oldBg, 500);
+            const el = document.getElementById('fullCode');
+            try {
+                const text = el.value;
+                await navigator.clipboard.writeText(text);
+                const oldBg = el.style.background;
+                el.style.background = "#1a3a20";
+                setTimeout(() => el.style.background = oldBg, 300);
+            } catch (err) {
+                el.focus();
+                el.setSelectionRange(0, el.value.length);
+                document.execCommand('copy');
+                const oldBg = el.style.background;
+                el.style.background = "#3a1a1a";
+                setTimeout(() => el.style.background = oldBg, 500);
+            }
         }
-    }
+
+        async function pasteToCanvas() {
+            const el = document.getElementById('fullCode');
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    el.value = text;
+                    fastUpdateLines();
+                    debounceSaveState();
+                    const oldBg = el.style.background;
+                    el.style.background = "#1a2a3a";
+                    setTimeout(() => el.style.background = oldBg, 300);
+                }
+            } catch (err) {
+                alert("Clipboard access denied. Please use Ctrl+V/Cmd+V to paste.");
+            }
+        }
+
+        async function pasteToBox(btn, selector) {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    const box = btn.closest('.pair-box');
+                    const target = box.querySelector(selector);
+                    if (target) {
+                        target.value = text;
+                        debounceCheckMatches();
+                    }
+                }
+            } catch (err) {
+                alert("Clipboard access denied. Please paste manually.");
+            }
+        }
 
     function openSearch() {
         document.getElementById('searchModal').style.display = 'flex';
@@ -774,43 +818,46 @@
                 return `
                     <div class="pair-box" id="pair-${id}" data-type="${type}" style="${boxStyle}">
                         <div class="pair-header">
-                            <span>${headerText}</span>
-                            <div style="display: flex; gap: 5px; align-items: center;">
-                                                        <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
-                                                        <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
-                                                        ${id !== 1 ? `<button class="remove-btn" onclick="removePair(${id})">✖ Remove</button>` : ''}
-                                                    </div>
-                                                </div>
-                                                <div class="label-row">
-                                                    <label>${label1}</label>
-                                                    <div style="display: flex; gap: 10px; align-items: center;">
-                                                        <span class="global-dup-warning-old" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
-                                                        <span class="match-percentage" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
-                                                    </div>
-                                                </div>
-                                                <textarea class="old-code" style="margin-bottom: 6px;" placeholder="Paste old snippet..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" translate="no" data-gramm="false" wrap="off" oninput="debounceCheckMatches()"></textarea>
+                                                    <span>${headerText}</span>
+                                                    <div style="display: flex; gap: 5px; align-items: center;">
+                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
+                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code')">📋 Paste</button>
+                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
+                                                                                ${id !== 1 ? `<button class="remove-btn" onclick="removePair(${id})">✖ Remove</button>` : ''}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="label-row">
+                                                                            <label>${label1}</label>
+                                                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                                                <span class="global-dup-warning-old" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
+                                                                                <span class="match-percentage" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <textarea class="old-code" style="margin-bottom: 6px;" placeholder="Paste old snippet..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" translate="no" data-gramm="false" wrap="off" oninput="debounceCheckMatches()"></textarea>
 
-                                                <div class="add-end-btn" onclick="toggleEndSnippet(this)">➕ Add End Snippet (For Long Code)</div>
+                                                                        <div class="add-end-btn" onclick="toggleEndSnippet(this)">➕ Add End Snippet (For Long Code)</div>
 
-                                                <div class="end-code-container">
-                                                    <div class="label-row">
-                                                        <label>Old Code (End snippet):</label>
-                                                        <div style="display: flex; gap: 10px; align-items: center;">
-                                                            <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
-                                                            <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
-                                                            <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
-                                                        </div>
-                                                    </div>
-                                                    <textarea class="old-code-end" placeholder="Paste end snippet..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" translate="no" data-gramm="false" wrap="off" oninput="debounceCheckMatches()"></textarea>
-                                                </div>
+                                                                        <div class="end-code-container">
+                                                                            <div class="label-row">
+                                                                                <label>Old Code (End snippet):</label>
+                                                                                <div style="display: flex; gap: 10px; align-items: center;">
+                                                                                    <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
+                                                                                    <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
+                                                                                    <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code-end')">📋 Paste</button>
+                                                                                    <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <textarea class="old-code-end" placeholder="Paste end snippet..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" translate="no" data-gramm="false" wrap="off" oninput="debounceCheckMatches()"></textarea>
+                                                                        </div>
 
-                                                <div class="label-row">
-                                                    <label>${label2}</label>
-                                                    <div style="display: flex; gap: 10px; align-items: center;">
-                                                        <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
-                                                        <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
-                                                    </div>
-                                                </div>
+                                                                        <div class="label-row">
+                                                                            <label>${label2}</label>
+                                                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                                                <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
+                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.new-code')">📋 Paste</button>
+                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
+                                                                            </div>
+                                                                        </div>
                                                 <textarea class="new-code" style="margin-bottom: 5px;" placeholder="Paste new snippet..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" translate="no" data-gramm="false" wrap="off" oninput="debounceCheckMatches()"></textarea>
                         <div style="display: flex; flex-direction: column; gap: 5px; align-items: center; margin: 8px -10px -10px -10px; background: #2a2a2a; padding: 10px 12px; border-radius: 0 0 8px 8px;">
                             ${blankLineToggle}
