@@ -141,15 +141,17 @@
     .close-btn { background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; }
     label { font-size: 12px; color: #aaa; margin-bottom: 5px; display: block; }
     .modal textarea { 
-                width: 100%; height: 80px; box-sizing: border-box; padding: 10px; 
-                border-radius: 5px; border: 1px solid #444; background: #1e1e1e; color: #d4d4d4;
-                font-family: monospace; font-size: 13px; resize: vertical; margin-bottom: 15px;
-                transition: height 0.2s;
-                text-rendering: optimizeSpeed;
-                font-variant-ligatures: none;
-                -webkit-text-size-adjust: none;
-                -webkit-user-modify: read-write-plaintext-only;
-            }
+                    width: 100%; height: 80px; box-sizing: border-box; padding: 10px; 
+                    border-radius: 5px; border: 1px solid #444; background: #1e1e1e; color: #d4d4d4;
+                    font-family: monospace; font-size: 13px; resize: vertical; margin-bottom: 15px;
+                    transition: height 0.2s;
+                    text-rendering: optimizeSpeed;
+                    font-variant-ligatures: none;
+                    -webkit-text-size-adjust: none;
+                    -webkit-user-modify: read-write-plaintext-only;
+                    content-visibility: auto;
+                    contain: content;
+                }
         .modal textarea.half-height { height: 45px !important; }
         .add-end-btn {
             background: #2d2d2d; color: #aaa; border: 1px dashed #555; padding: 5px; 
@@ -158,9 +160,25 @@
         .add-end-btn:hover { background: #3d3d3d; color: #fff; }
         .end-code-container { display: none; }
     .action-btn { 
-        width: 100%; padding: 12px; background: #0a7ea4; color: white; border: none; 
-        border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; 
-    }
+            width: 100%; padding: 12px; background: #0a7ea4; color: white; border: none; 
+            border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; 
+        }
+        .snippet-action-btn {
+                        width: auto;
+                        height: 22px;
+                        min-width: 0;
+                        padding: 0 8px;
+                        font-size: 10px;
+                        line-height: 1;
+                        border-radius: 4px;
+                        font-weight: 600;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 3px;
+                        flex-shrink: 0;
+                        white-space: nowrap;
+                    }
     #status { 
         padding: 10px; border-radius: 5px; font-size: 13px; font-weight: bold; 
         display: none; margin-bottom: 15px; text-align: center;
@@ -206,20 +224,21 @@
             <div class="toolbar-title" style="white-space: nowrap; flex-shrink: 0;">📝 Code Editor</div>
             <div style="display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;">
                 <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="triggerUndo()">↩️ Undo</button>
-                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="triggerRedo()">↪️ Redo</button>
-                <input type="file" id="fileInput" style="display: none;" accept=".txt,.js,.html,.css,.lua,.py,*/*" onchange="handleFileUpload(event)">
-                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="openFileDirectly()">📁 Open File</button>
-                                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="copyCanvas()">📄 Copy</button>
+                                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="triggerRedo()">↪️ Redo</button>
+                                <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(event)">
+                                                <button class="toolbar-btn" style="background: #1e4620; border: 1px solid #4caf50; flex-shrink: 0;" onclick="openFileDirectly()">📁 Open File</button>
+                                                                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="copyCanvas()">📄 Copy</button>
                                 <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; flex-shrink: 0;" onclick="pasteToCanvas()">📋 Paste</button>
                                 <button class="toolbar-btn" style="flex-shrink: 0;" onclick="openSearch()">🔍 Search</button>
                                             </div>
                         </div>
 
     <div class="toolbar tab-toolbar">
-        <div id="tabsContainer" style="display: flex; gap: 5px;">
-            <!-- Tabs render here -->
+            <div id="tabsContainer" style="display: flex; gap: 5px; align-items: center;">
+                <!-- Tabs render here -->
+            </div>
+            <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #555; padding: 4px 8px; font-size: 12px; margin-left: 10px; white-space: nowrap;" onclick="addSeparatorTab()">(+) Separator Line</button>
         </div>
-    </div>
 
     <div class="editor-container">
         <textarea id="lineNumbers" readonly tabindex="-1">1</textarea>
@@ -228,15 +247,16 @@
 
     <div class="bottom-toolbar">
             <div style="display: flex; gap: 10px;">
-                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px dashed #666;" onclick="createNewCanvas()">+ New Canvas</button>
-                <button class="toolbar-btn" style="background: #5c1e1e; border: 1px solid #f44336;" onclick="deleteCanvas()">🗑️ Delete</button>
-            </div>
+                            <button class="toolbar-btn" style="background: #2d2d2d; border: 1px dashed #666;" onclick="createNewCanvas()">+ New Canvas</button>
+                            <button class="toolbar-btn" style="background: #5c1e1e; border: 1px solid #f44336;" onclick="deleteCanvas()">🗑️ Delete</button>
+                            <button class="toolbar-btn" style="background: #5c4000; border: 1px solid #ffb300;" onclick="clearCanvasBtn()">✨ Clear</button>
+                        </div>
 
             <div style="display: flex; gap: 8px; align-items: center;">
-                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #0a7ea4; font-weight: bold; font-size: 16px;" title="Previous Match" onclick="navigateMatch(-1)">&lt;</button>
-                <span style="font-size: 12px; color: #aaa; font-weight: bold; white-space: nowrap;">Match</span>
-                <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #0a7ea4; font-weight: bold; font-size: 16px;" title="Next Match" onclick="navigateMatch(1)">&gt;</button>
-            </div>
+                            <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #0a7ea4; font-weight: bold; font-size: 14px; padding: 8px 15px; width: 44px;" title="Previous Match" onclick="navigateMatch(-1)">&lt;</button>
+                            <span style="font-size: 12px; color: #aaa; font-weight: bold; white-space: nowrap;">Match</span>
+                            <button class="toolbar-btn" style="background: #2d2d2d; border: 1px solid #0a7ea4; font-weight: bold; font-size: 14px; padding: 8px 15px; width: 44px;" title="Next Match" onclick="navigateMatch(1)">&gt;</button>
+                        </div>
 
             <button class="toolbar-btn" style="background: #1e4620; border: 1px solid #4caf50;" onclick="saveFile()">💾 Save</button>
         </div>
@@ -258,11 +278,11 @@
                     <div class="pair-box" id="pair-1">
                                         <div class="pair-header">
                                             <span>Snippet #1</span>
-                                            <div style="display: flex; gap: 5px;">
-                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
-                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code')">📋 Paste</button>
-                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
-                                            </div>
+                                            <div style="display: flex; gap: 4px;">
+                                                                                            <button class="action-btn snippet-action-btn" style="background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
+                                                                                            <button class="action-btn snippet-action-btn" style="background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code')">📋 Paste</button>
+                                                                                            <button class="action-btn snippet-action-btn" style="background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
+                                                                                        </div>
                                         </div>
                                         <div class="label-row">
                                                                                     <label>Old Code (Start snippet):</label>
@@ -279,11 +299,13 @@
                                                                                                         <div class="label-row">
                                                                                                             <label>Old Code (End snippet):</label>
                                                                                                             <div style="display: flex; gap: 10px; align-items: center;">
-                                                                                                                <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
-                                                                                                                <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
-                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code-end')">📋 Paste</button>
-                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
-                                                                                                            </div>
+                                                                                                                                                                                                                            <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
+                                                                                                                                                                                                                            <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
+                                                                                                                                                                                                                            <div style="display: flex; gap: 4px;">
+                                                                                                                                                                                                                                <button class="action-btn snippet-action-btn" style="background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code-end')">📋 Paste</button>
+                                                                                                                                                                                                                                <button class="action-btn snippet-action-btn" style="background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
+                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                        </div>
                                                                                                         </div>
                                                                                                         <textarea class="old-code-end" placeholder="Paste end snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
                                                                                                     </div>
@@ -291,10 +313,12 @@
                                                                                 <div class="label-row">
                                                                                                                             <label>New Code:</label>
                                                                                                                             <div style="display: flex; gap: 10px; align-items: center;">
-                                                                                                                                <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
-                                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.new-code')">📋 Paste</button>
-                                                                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
-                                                                                                                            </div>
+                                                                                                                                                                                                                                                            <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
+                                                                                                                                                                                                                                                            <div style="display: flex; gap: 4px;">
+                                                                                                                                                                                                                                                                <button class="action-btn snippet-action-btn" style="background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.new-code')">📋 Paste</button>
+                                                                                                                                                                                                                                                                <button class="action-btn snippet-action-btn" style="background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
+                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                        </div>
                                                                                                                         </div>
                                                                                                     <textarea class="new-code" style="margin-bottom: 5px;" placeholder="Paste new snippet..." spellcheck="false" autocomplete="off" oninput="debounceCheckMatches()"></textarea>
                                                                                                                                                                                                                                                 <div style="display: flex; flex-direction: column; gap: 5px; align-items: center; margin: 8px -10px -10px -10px; background: #2a2a2a; padding: 10px 12px; border-radius: 0 0 8px 8px;">
@@ -331,21 +355,58 @@
         let saveStateTimeout;
 
         function debounceSaveState() {
-            clearTimeout(saveStateTimeout);
-            saveStateTimeout = setTimeout(() => saveState(), 500);
-        }
+                    clearTimeout(saveStateTimeout);
+                    saveStateTimeout = setTimeout(() => {
+                        saveState();
+                        persistToLocalStorage();
+                    }, 500);
+                }
 
     // Multi-Canvas State Management
-        let canvases = [{ id: 1, name: "code.txt", content: "", fileHandle: null }];
-    let activeCanvasId = 1;
-    let canvasCounter = 1;
+            let canvases = [{ id: 1, name: "code.txt", content: "", fileHandle: null }];
+        let activeCanvasId = 1;
+        let canvasCounter = 1;
 
-    function renderTabs() {
-        const container = document.getElementById('tabsContainer');
-        container.innerHTML = canvases.map(c => 
-            `<button class="tab-btn ${c.id === activeCanvasId ? 'active' : ''}" onclick="switchCanvas(${c.id})">${c.name}</button>`
-        ).join('');
-    }
+        function persistToLocalStorage() {
+            const simplifiedCanvases = canvases.map(c => ({
+                id: c.id,
+                name: c.name,
+                content: c.id === activeCanvasId ? document.getElementById('fullCode').value : c.content,
+                pairsHTML: c.pairsHTML,
+                isSeparator: c.isSeparator
+            }));
+            localStorage.setItem('smart_replacer_state', JSON.stringify({
+                activeCanvasId,
+                canvasCounter,
+                canvases: simplifiedCanvases
+            }));
+        }
+
+        function renderTabs() {
+                const container = document.getElementById('tabsContainer');
+                container.innerHTML = canvases.map(c => {
+                    if (c.isSeparator) {
+                        return `<div style="color: #666; padding: 0 5px; font-weight: bold; cursor: pointer; user-select: none;" onclick="removeSeparatorTab(${c.id})" title="Click to remove separator">|</div>`;
+                    }
+                    return `<button class="tab-btn ${c.id === activeCanvasId ? 'active' : ''}" onclick="switchCanvas(${c.id})">${c.name}</button>`;
+                }).join('');
+            }
+
+            function addSeparatorTab() {
+                canvasCounter++;
+                canvases.push({ id: canvasCounter, name: "|", content: "", fileHandle: null, pairsHTML: null, isSeparator: true });
+                renderTabs();
+                persistToLocalStorage();
+            }
+
+            function removeSeparatorTab(id) {
+                const idx = canvases.findIndex(c => c.id === id);
+                if (idx !== -1) {
+                    canvases.splice(idx, 1);
+                    renderTabs();
+                    persistToLocalStorage();
+                }
+            }
 
     // Saves the current Smart Replace pairs (Old/New code + toggles) onto a canvas object
         function savePairsToCanvas(canvas) {
@@ -376,11 +437,12 @@
             document.getElementById('fullCode').value = newCanvas.content;
             loadPairsFromCanvas(newCanvas);
 
-            renderTabs();
-            fastUpdateLines();
-        }
+                        renderTabs();
+                        fastUpdateLines();
+                        persistToLocalStorage();
+                    }
 
-        function createNewCanvas() {
+                    function createNewCanvas() {
             const activeCanvas = canvases.find(c => c.id === activeCanvasId);
             if (activeCanvas) {
                 activeCanvas.content = document.getElementById('fullCode').value;
@@ -404,40 +466,105 @@
             document.getElementById('fullCode').value = "";
             loadPairsFromCanvas(newCanvas);
 
-            renderTabs();
-            fastUpdateLines();
-        }
+                        renderTabs();
+                        fastUpdateLines();
+                        persistToLocalStorage();
+                    }
 
-        function deleteCanvas() {
-            if (canvases.length <= 1) {
-                alert("You must have at least one canvas open.");
-                return;
-            }
+                    function deleteCanvas() {
+                                const normalCanvases = canvases.filter(c => !c.isSeparator);
+                                if (normalCanvases.length <= 1) {
+                                    alert("You must have at least one canvas open.");
+                                    return;
+                                }
 
-            // Find the index of the canvas we are about to delete
-            const currentIndex = canvases.findIndex(c => c.id === activeCanvasId);
+                                // Find the index of the canvas we are about to delete
+                                const currentIndex = canvases.findIndex(c => c.id === activeCanvasId);
 
-            // Remove it from the list
-            canvases.splice(currentIndex, 1);
+                                // Remove it from the list
+                                canvases.splice(currentIndex, 1);
 
-            // Determine the previous tab index (or 0 if the first tab was deleted)
-            let newIndex = currentIndex - 1;
-            if (newIndex < 0) newIndex = 0;
+                                // Determine the previous tab index
+                                let newIndex = currentIndex - 1;
+                                while (newIndex >= 0 && canvases[newIndex].isSeparator) newIndex--;
+                                if (newIndex < 0) {
+                                    newIndex = 0;
+                                    while (newIndex < canvases.length && canvases[newIndex].isSeparator) newIndex++;
+                                    if (newIndex >= canvases.length) {
+                                        canvasCounter++;
+                                        const newCanvas = { id: canvasCounter, name: `untitled_1.txt`, content: "", fileHandle: null, pairsHTML: null };
+                                        canvases.push(newCanvas);
+                                        newIndex = canvases.length - 1;
+                                    }
+                                }
 
-            // Switch to the newly targeted canvas
-            activeCanvasId = canvases[newIndex].id;
-            document.getElementById('fullCode').value = canvases[newIndex].content;
-            loadPairsFromCanvas(canvases[newIndex]);
+                                // Switch to the newly targeted canvas
+                                activeCanvasId = canvases[newIndex].id;
+                                document.getElementById('fullCode').value = canvases[newIndex].content || "";
+                                loadPairsFromCanvas(canvases[newIndex]);
 
-            renderTabs();
-            fastUpdateLines();
-        }
+                                renderTabs();
+                                fastUpdateLines();
+                                persistToLocalStorage();
+                            }
 
-    window.onload = function() {
-            // Automatically injects the optimized HTML into the first tab so it doesn't use the old hardcoded HTML
-            loadPairsFromCanvas(canvases[0]);
-            renderTabs();
-        };
+                            function clearCanvasBtn() {
+                                if (confirm("Are you sure you want to clear the current canvas?")) {
+                                    document.getElementById('fullCode').value = "";
+                                    fastUpdateLines();
+                                    saveState("");
+                                    persistToLocalStorage();
+                                }
+                            }
+
+                        window.onload = function() {
+                const saved = localStorage.getItem('smart_replacer_state');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        if (data.canvases && data.canvases.length > 0) {
+                            canvases = data.canvases.map(c => ({...c, fileHandle: null}));
+                            activeCanvasId = data.activeCanvasId;
+                            canvasCounter = data.canvasCounter || canvases[canvases.length - 1].id;
+
+                            if (!canvases.find(c => c.id === activeCanvasId)) {
+                                activeCanvasId = canvases[0].id;
+                            }
+                        }
+                    } catch(e) {}
+                }
+
+                const current = canvases.find(c => c.id === activeCanvasId) || canvases[0];
+                            document.getElementById('fullCode').value = current.content || "";
+                            loadPairsFromCanvas(current);
+                            renderTabs();
+                            fastUpdateLines();
+
+                            // NATIVE APP INTEGRATION: Receives writable files directly from ZArchiver's "Open With" menu!
+                            if ('launchQueue' in window) {
+                                window.launchQueue.setConsumer(async (launchParams) => {
+                                    if (!launchParams.files || launchParams.files.length === 0) return;
+                                    for (const fileHandle of launchParams.files) {
+                                        const file = await fileHandle.getFile();
+                                        const text = await file.text();
+
+                                        canvasCounter++;
+                                        const newId = canvasCounter;
+                                        const newCanvas = { id: newId, name: file.name, content: text, fileHandle: fileHandle, pairsHTML: null, isSeparator: false };
+                                        canvases.push(newCanvas);
+                                        activeCanvasId = newId;
+
+                                        document.getElementById('fullCode').value = text;
+                                        loadPairsFromCanvas(newCanvas);
+                                        renderTabs();
+                                        fastUpdateLines();
+                                        saveState(text);
+                                        persistToLocalStorage();
+                                        showLineCountToast(text);
+                                    }
+                                });
+                            }
+                        };
 
         // Briefly shows a "Loaded N lines" toast after opening a file (Fix: line count suggestion)
         let lineCountToastTimeout;
@@ -458,16 +585,35 @@
             toast.style.display = 'block';
 
             clearTimeout(lineCountToastTimeout);
-            lineCountToastTimeout = setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => { toast.style.display = 'none'; }, 400);
-            }, 2000);
-        }
+                        lineCountToastTimeout = setTimeout(() => {
+                            toast.style.opacity = '0';
+                            setTimeout(() => { toast.style.display = 'none'; }, 400);
+                        }, 5000);
+                    }
 
     // Sync scroll between the code box and line numbers seamlessly
     function syncScroll() {
-        document.getElementById('lineNumbers').scrollTop = document.getElementById('fullCode').scrollTop;
-    }
+            document.getElementById('lineNumbers').scrollTop = document.getElementById('fullCode').scrollTop;
+        }
+
+        // Detect when the app resumes from background (screen off, app switch, tab hidden)
+        // and briefly disable pointer events on the heavy textareas so the browser can
+        // finish its layout/repaint work before accepting touch input — this prevents
+        // the "frozen for 1-3 seconds" feeling by making the freeze happen BEFORE you
+        // try to tap, instead of while you're tapping.
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                const fullCodeEl = document.getElementById('fullCode');
+                if (fullCodeEl) {
+                    fullCodeEl.style.pointerEvents = 'none';
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            fullCodeEl.style.pointerEvents = 'auto';
+                        });
+                    });
+                }
+            }
+        });
 
     // Blazing fast line counter that only runs DOM updates when line count physically changes
     function fastUpdateLines() {
@@ -488,10 +634,14 @@
     }
 
     async function openFileDirectly() {
-            if ('showOpenFilePicker' in window) {
-                try {
-                    const [fileHandle] = await window.showOpenFilePicker();
-                    const file = await fileHandle.getFile();
+                if ('showOpenFilePicker' in window) {
+                    try {
+                        // Forcing excludeAcceptAllOption to false maximizes visibility in Android's Storage Access Framework
+                        const [fileHandle] = await window.showOpenFilePicker({
+                            excludeAcceptAllOption: false,
+                            multiple: false
+                        });
+                        const file = await fileHandle.getFile();
                     const text = await file.text();
 
                     // Save current canvas content before switching away from it
@@ -512,9 +662,10 @@
                                         loadPairsFromCanvas(newCanvas);
                                         renderTabs();
                                         fastUpdateLines();
-                                        saveState(text);
+                                                                                saveState(text);
+                                                                                persistToLocalStorage();
 
-                                        showLineCountToast(text);
+                                                                                showLineCountToast(text);
                 } catch (err) {
                     if (err.name !== 'AbortError') {
                         console.error(err);
@@ -554,9 +705,10 @@
                                             loadPairsFromCanvas(newCanvas);
                                             renderTabs();
                                             fastUpdateLines();
-                                            saveState(text);
+                                                                                        saveState(text);
+                                                                                        persistToLocalStorage();
 
-                                            showLineCountToast(text);
+                                                                                        showLineCountToast(text);
                                         };
                     reader.readAsText(file);
                     event.target.value = ''; 
@@ -819,12 +971,12 @@
                     <div class="pair-box" id="pair-${id}" data-type="${type}" style="${boxStyle}">
                         <div class="pair-header">
                                                     <span>${headerText}</span>
-                                                    <div style="display: flex; gap: 5px; align-items: center;">
-                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
-                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code')">📋 Paste</button>
-                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
-                                                                                ${id !== 1 ? `<button class="remove-btn" onclick="removePair(${id})">✖ Remove</button>` : ''}
-                                                                            </div>
+                                                    <div style="display: flex; gap: 4px; align-items: center;">
+                                                                                                                                    <button class="action-btn snippet-action-btn" style="background: #4caf50;" onclick="searchSinglePair(this)">🔍 Search</button>
+                                                                                                                                    <button class="action-btn snippet-action-btn" style="background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code')">📋 Paste</button>
+                                                                                                                                    <button class="action-btn snippet-action-btn" style="background: #f44336;" onclick="clearBox(this, '.old-code')">Clear</button>
+                                                                                                                                    ${id !== 1 ? `<button class="remove-btn" onclick="removePair(${id})" style="margin-left: 4px;">✖ Remove</button>` : ''}
+                                                                                                                                </div>
                                                                         </div>
                                                                         <div class="label-row">
                                                                             <label>${label1}</label>
@@ -841,11 +993,13 @@
                                                                             <div class="label-row">
                                                                                 <label>Old Code (End snippet):</label>
                                                                                 <div style="display: flex; gap: 10px; align-items: center;">
-                                                                                    <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
-                                                                                    <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
-                                                                                    <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code-end')">📋 Paste</button>
-                                                                                    <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
-                                                                                </div>
+                                                                                                                                                                    <span class="global-dup-warning-end" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Duplication</span>
+                                                                                                                                                                    <span class="match-percentage-end" style="font-size: 12px; font-weight: bold; color: #aaa;"></span>
+                                                                                                                                                                    <div style="display: flex; gap: 4px;">
+                                                                                                                                                                        <button class="action-btn snippet-action-btn" style="background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.old-code-end')">📋 Paste</button>
+                                                                                                                                                                        <button class="action-btn snippet-action-btn" style="background: #f44336;" onclick="clearBox(this, '.old-code-end')">Clear</button>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
                                                                             </div>
                                                                             <textarea class="old-code-end" placeholder="Paste end snippet..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" translate="no" data-gramm="false" wrap="off" oninput="debounceCheckMatches()"></textarea>
                                                                         </div>
@@ -853,10 +1007,12 @@
                                                                         <div class="label-row">
                                                                             <label>${label2}</label>
                                                                             <div style="display: flex; gap: 10px; align-items: center;">
-                                                                                <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
-                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.new-code')">📋 Paste</button>
-                                                                                <button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto; background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
-                                                                            </div>
+                                                                                                                                                            <span class="same-code-warning" style="font-size: 12px; font-weight: bold; color: #ffb300; display: none;">⚠️ Matches Old Code</span>
+                                                                                                                                                            <div style="display: flex; gap: 4px;">
+                                                                                                                                                                <button class="action-btn snippet-action-btn" style="background: #2d2d2d; border: 1px solid #555;" onclick="pasteToBox(this, '.new-code')">📋 Paste</button>
+                                                                                                                                                                <button class="action-btn snippet-action-btn" style="background: #f44336;" onclick="clearBox(this, '.new-code')">Clear</button>
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
                                                                         </div>
                                                 <textarea class="new-code" style="margin-bottom: 5px;" placeholder="Paste new snippet..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" translate="no" data-gramm="false" wrap="off" oninput="debounceCheckMatches()"></textarea>
                         <div style="display: flex; flex-direction: column; gap: 5px; align-items: center; margin: 8px -10px -10px -10px; background: #2a2a2a; padding: 10px 12px; border-radius: 0 0 8px 8px;">
@@ -897,9 +1053,16 @@
         }
 
     function debounceCheckMatches() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(checkMatches, 250); 
-    }
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                checkMatches();
+                const activeCanvas = canvases.find(c => c.id === activeCanvasId);
+                if (activeCanvas) {
+                    savePairsToCanvas(activeCanvas);
+                    persistToLocalStorage();
+                }
+            }, 250); 
+        }
 
     // Removed handleOldCodePaste to prevent automatic redirection on paste
 
@@ -1668,10 +1831,14 @@
     
 
         async function batchReplace(replaceAll) {
-                        const fullCodeEl = document.getElementById('fullCode');
-                        saveState(fullCodeEl.value);
-                        let fullCode = fullCodeEl.value;
-                    const oldCodeEls = document.querySelectorAll('.old-code');
+                                const fullCodeEl = document.getElementById('fullCode');
+                                saveState(fullCodeEl.value);
+                                let fullCode = fullCodeEl.value;
+                                const initialCode = fullCode;
+                                const activeCanvas = canvases.find(c => c.id === activeCanvasId);
+                                const targetName = activeCanvas ? activeCanvas.name : "";
+
+                            const oldCodeEls = document.querySelectorAll('.old-code');
                 const newCodeEls = document.querySelectorAll('.new-code');
                 const statusEl = document.getElementById('status');
 
@@ -1971,10 +2138,24 @@
                 }
 
                 fullCodeEl.value = fullCode;
-                fastUpdateLines();
-                saveState(fullCode);
+                                fastUpdateLines();
+                                saveState(fullCode);
 
-                if (totalSuccess > 0) {
+                                if (activeCanvas) {
+                                    activeCanvas.content = fullCode;
+                                    const identicalCanvases = canvases.filter(c => 
+                                        c.id !== activeCanvasId && 
+                                        c.name === targetName && 
+                                        c.content === initialCode &&
+                                        !c.isSeparator
+                                    );
+                                    identicalCanvases.forEach(c => {
+                                        c.content = fullCode;
+                                    });
+                                }
+                                persistToLocalStorage();
+
+                                if (totalSuccess > 0) {
                     statusEl.innerText = `✅ Replaced ${totalSuccess} snippet(s) (${fuzzySuccess} format-adjusted). ${failCount > 0 ? `⚠️ ${failCount} failed.` : ''}`;
                     statusEl.className = "status-success";
 
