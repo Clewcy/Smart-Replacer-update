@@ -9,8 +9,19 @@
   "orientation": "any",
   "background_color": "#1e1e1e",
   "theme_color": "#2d2d2d",
-  "orientation": "any",
-  "icons": [
+    "file_handlers": [
+        {
+          "action": "./index.html",
+          "accept": {
+            "text/*": [".txt", ".js", ".json", ".html", ".css", ".lua", ".py", ".*", ""],
+            "application/javascript": [".js"],
+            "application/json": [".json"],
+            "application/octet-stream": [".*", ""],
+            "*/*": [".*", ""]
+          }
+        }
+      ],
+    "icons": [
     {
       "src": "icon.png",
       "sizes": "192x192",
